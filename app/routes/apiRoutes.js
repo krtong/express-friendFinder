@@ -1,43 +1,31 @@
-var friendsArr = require("../data/friends");
+var userDB = require("../data/friends");
 
 module.exports = function(app) {
 
 
   app.get("/app/data/friends", function (req, res) {
-      return res.json(friendsArr);
+      return res.json(userDB);
   });
 
-  // Create New Person and find their friend - takes in JSON input
-  app.post("/app/data/friends", function (req, res) {
+  const calculateFriends = function (req, res) {
 
-    var newFriend = req.body;
-    
-
-    //Code here to match the user to their friend...
+    const newUser = req.body;
+    const {scores} = newUser;
     let minDiff = Infinity;
-    let closestMatch
-    for (let i = 0; i < friendsArr.length; i++) {
-      let currDiff = 0;
-      for (let j = 0; j < friendsArr[i].scores.length; j++) {
-        currDiff += Math.abs(newFriend.scores[j] - friendsArr[i].scores[j]);
-      }
-      if (currDiff < minDiff) {
-        closestMatch = friendsArr[i];
-        minDiff = currDiff;
-      }
-      // console.log("Compared you to: ", friendsArr[i].name);
-      // console.log("Your score difference was: ", currDiff);
-      // console.log("------")
-    }
-
-    // console.log("*****************************")
-    // console.log("YOUR NEW FRIEND IS: ", closestMatch);
-    // console.log("Your score difference was only: ", minDiff);
-    // console.log("*****************************")
-
-    friendsArr.push(newFriend);
-
-    res.json(closestMatch);
-
-  });
+    const scoreArr = userDB.map((user, i) => {
+      const compareArr = user.scores.map((a, i) => Math.abs(a - scores[i]));
+      console.log({compareArr})
+      const score = compareArr.reduce((sum, num) => num + sum);
+      return score;
+    });
+    
+    const idx = scoreArr.reduce((j, cur, i, arr) => arr[j] >= cur ? i : j, 0);
+    const bestUser = userDB[idx];
+    const bestScore = scoreArr[idx]
+    const userScore = scores.reduce((acc, cur) =>  parseInt(cur) + acc, 0)
+    const matchPercentage = ((userScore- bestScore)/userScore*100).toFixed(0);
+    userDB.push(newUser);
+    res.json({bestUser, matchPercentage})
+  }
+  app.post("/app/data/friends", calculateFriends);
 }

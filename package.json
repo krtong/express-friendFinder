@@ -1,24 +1,25 @@
 {
-  "name": "friend-finder",
+  "name": "express-friendFinder",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Friend Finder is a full-stack application that uses Node, Express, jQuery, and SweetAlert2 to find your closest friend match via a highly non-rigorous and unscientific psychological survey.",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cody-brock/friend-finder.git"
+    "url": "git+https://github.com/krtong/express-friendFinder.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/cody-brock/friend-finder/issues"
+    "url": "https://github.com/krtong/express-friendFinder/issues"
   },
-  "homepage": "https://github.com/cody-brock/friend-finder#readme",
+  "homepage": "https://github.com/krtong/express-friendFinder#readme",
   "dependencies": {
     "express": "^4.17.1",
-    "sweetalert2": "^9.5.4"
+    "sweetalert2": "^9.10.6"
   }
 }

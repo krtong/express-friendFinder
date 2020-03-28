@@ -7,16 +7,9 @@
   <meta charset="UTF-8">
   <title>Friend Finder</title>
 
-  <!-- Latest compiled and minified CSS & JS -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="app/styling/styles.css">
-  <!-- app.use("/assets", express.static('assets')); -->
-
-  <script src="https://code.jquery.com/jquery.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-
 
 </head>
 
@@ -85,6 +78,9 @@
     </div>
     
             
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
   <script>
 
     $(document).ready(function () {
@@ -106,17 +102,22 @@
           };
 
           //array of questions
-          const questions = ['I like to go for hikes.', 'I like to watch sports.', 'I prefer to relax over being active.', 'I love animals.', 'I would never lie to a friend.', 'I like to go to music concerts.', 'Fun conversations are better than serious ones.', 'Friends should do everything together.', 'It\'s OK for friends to arrive late to plans.', 'I would rather go out than stay in.']
+          const questions = [
+            'I like to ride bikes.',
+            'I like to make art.', 
+            'I like country music.', 
+            'I like to swim.', 
+            'I like social distancing.', 
+            'I like to cook.', 
+            'I like to clean.', 
+            'I like to code.', 
+            'I like to bang my head against a wall.', 
+            'I like chicken quesadillas.'
+          ];
+          
           let form = questions.map(html);
-          // console.log("form", form)
           $('#survey-questions').append(form);
           
-        //BELOW CODE IS CRITICAL. IT HANDLES HOW FORM DATA IS SENT TO OUR SERVER 
-        // In this code below we create the Front-end JavaScript which "POSTS" our form data to our express server.
-        // In essence, when the user hits submit, jQuery grabs all of the fields then sends a post request to our api
-        // Our api recognizes the route (/api/tables)... and then runs the associated code (found in api-routes.js).
-        // In this case the associated code "saves" the data to the table-data.js file or waitinglist-data.js file
-        
 
       $(".submit").on("click", function(event) {
         event.preventDefault();
@@ -140,34 +141,26 @@
           })
           return;
         }
-        
-        // Here we grab the form elements
+
         var surveyResult = {
           name: $("#name").val().trim(),
           photo: $("#photo").val().trim(),
           scores: questions.map((e, i) => $(`#id-${i+1} input:radio:checked`).val()),
         };
 
-        console.log("surveyResult", surveyResult);
-
-        // This line is the magic. It"s very similar to the standard ajax function we used.
-        // Essentially we give it a URL, we give it the object we want to send, then we have a "callback".
-        // The callback is the response of the server. In our case, we set up code in api-routes that "returns" true or false
-        // depending on if a tables is available or not.
         $.post("/app/data/friends", surveyResult,
-          function(data) {
+          function({bestUser, matchPercentage}) {
             //Displays results to user
             Swal.fire({
               title: `Congratulations!`,
-              html: `Your top friend match is: <br><b>${data.name}</b>`,
-              imageUrl: `${data.photo}`,
+              html: `Your top friend match is: <br><b>${bestUser.name}</b><br><h3>${matchPercentage}% Match!</h3>`,
+              imageUrl: `${bestUser.photo}`
             })
           
             // Clear the form when submitting
             $("#name").val("");
             $("#photo").val("");
             $("input:radio").attr("checked", false);
-          
           }
         );
       });
